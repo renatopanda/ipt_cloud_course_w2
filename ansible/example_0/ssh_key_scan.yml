@@ -1,0 +1,7 @@
+---
+- name: Add hosts to known_hosts
+  hosts: linux_vms
+  gather_facts: no
+  tasks:
+  - name: run ssh-keyscan to add keys to known_hosts
+    local_action: shell ssh-keyscan {{ ansible_host }} >> ~/.ssh/known_hosts

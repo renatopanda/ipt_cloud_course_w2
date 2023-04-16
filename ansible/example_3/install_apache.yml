@@ -1,0 +1,18 @@
+
+---
+- hosts: node1
+  become: true
+  vars:
+    ansible_become_pass: vagrant # pwd for sudo, our user should instead be NOPASSWD sudoer
+  
+  tasks:
+    - name: install apache
+      package: pkg=httpd state=present
+    
+      notify:
+        - start httpd
+
+  handlers:
+    - name: start httpd
+      service: name=httpd state=started
+

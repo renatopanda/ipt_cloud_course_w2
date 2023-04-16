@@ -1,0 +1,29 @@
+
+---
+- hosts: test_servers
+  become: true
+  vars:
+    ansible_become_pass: vagrant # pwd for sudo
+  
+  tasks:
+    - name: set apache package name by distro
+      include_vars: "vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+    - name: ensure apache is the latest version
+      package:
+        pkg: "{{ apache_package }}"
+        state: latest
+      notify:
+        - start apache service
+    
+    - name: copy default index.html
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+  
+  handlers:
+    - name: start apache service
+      service:
+        name: "{{ apache_package }}"
+        state: started
+

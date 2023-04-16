@@ -1,0 +1,12 @@
+<html>
+	<head>
+		<title>Welcome to "{{ inventory_hostname }}"</title>
+	</head>
+	
+	<body>
+		<p>Welcome to the default webpage on "{{ inventory_hostname }}", generated with Ansible in "{{ now() }}"</p>
+		{% if webpage['message'] is defined %}
+			<p>{{ webpage['message'] }}</p>
+		{%- endif %}
+	</body>
+</html>

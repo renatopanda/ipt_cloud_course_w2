@@ -1,0 +1,4 @@
+apache_package: httpd
+webpage:
+  message: "Hello world from CentOS!"
+

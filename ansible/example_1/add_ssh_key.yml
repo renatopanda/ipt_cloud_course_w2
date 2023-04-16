@@ -1,0 +1,10 @@
+---
+- name: Copy SSH public key to remote node
+  hosts: linux_vms
+  become: true
+  tasks:
+    - name: Copy SSH public key to remote node
+      authorized_key:
+        user: vagrant
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present

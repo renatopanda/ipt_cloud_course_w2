@@ -1,0 +1,25 @@
+
+---
+- hosts: test_servers
+  become: true
+  vars:
+    ansible_become_pass: vagrant # pwd for sudo
+  
+  tasks:
+    - name: set apache package name by distro
+      include_vars: "./vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+#    - name: define package names as a list instead of an array
+#      set_fact:
+#        apache_packages: "{{ packages_list | list }}"
+
+    - name: install apache
+      package: pkg="{{ apache_package }}" state=present
+    
+      notify:
+        - start httpd
+
+  handlers:
+    - name: start httpd
+      service: name="{{ apache_package }}" state=started
+

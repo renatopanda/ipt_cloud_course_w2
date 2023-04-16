@@ -1,0 +1,29 @@
+
+---
+- hosts: node3
+  become: true
+  vars:
+    ansible_become_pass: vagrant # pwd for sudo
+
+  tasks:
+    - name: Install nginx
+      package: pkg=nginx state=present update_cache=true
+      notify:
+        - start nginx
+
+    - name: Upload default index.php for host
+      copy: src=index.php dest=/usr/share/nginx/html/ mode=0644
+      register: php
+      ignore_errors: True
+
+    - name: Remove index.html for host
+      command: rm /usr/share/nginx/html/index.html
+      when: php|success
+
+    - name: Upload default index.html for host
+      copy: src=index.html dest=/usr/share/nginx/html/ mode=0644
+      when: php|failed
+
+  handlers:
+        - name: start nginx
+          service: name=nginx state=started
