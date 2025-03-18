@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define "ansible" do |ansible|
-    ansible.vm.box = "bento/centos-7"
+    ansible.vm.box = "bento/centos-stream-9"
     ansible.vm.hostname = "ansible-server"
     ansible.vm.network "private_network", ip: '192.168.33.10'
 
@@ -13,15 +13,20 @@ Vagrant.configure("2") do |config|
       v.memory = 1024
      # v.linked_clone = true
     end
-    ansible.vm.provision "shell", path: "./provision/install_ansible.sh"
+    ansible.vm.provision "shell",  path: "./provision/install_ansible.sh"
 
     ansible.vm.provision "shell", privileged: false, inline: <<-SHELL
       ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+      pip3 install --upgrade pip
+      pip3 install pipx
+      echo "Install Ansible"
+      pipx install --include-deps ansible 
+
     SHELL
   end
 
   config.vm.define "node1" do |node1|
-    node1.vm.box = "bento/centos-7"
+    node1.vm.box = "bento/centos-stream-9"
     node1.vm.hostname = "node1"
     node1.vm.network "private_network", ip: '192.168.33.15'
 
@@ -34,7 +39,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "node2" do |node2|
-    node2.vm.box = "bento/ubuntu-16.04"
+    node2.vm.box = "bento/ubuntu-22.04"
     node2.vm.hostname = "node2"
     node2.vm.network "private_network", ip: '192.168.33.20'
 
@@ -47,7 +52,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "node3" do |node3|
-    node3.vm.box = "bento/ubuntu-18.04"
+    node3.vm.box = "bento/ubuntu-22.04"
     node3.vm.hostname = "node3"
     node3.vm.network "private_network", ip: '192.168.33.30'
 
@@ -60,7 +65,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "node4" do |node4|
-    node4.vm.box = "bento/ubuntu-20.04"
+    node4.vm.box = "bento/ubuntu-22.04"
     node4.vm.hostname = "node4"
     node4.vm.network "private_network", ip: '192.168.33.40'
 
